@@ -1,21 +1,26 @@
 vim.g.mapleader = " "
 
--- general keymaps
-vim.keymap.set("n", "s", "<nop>")                   -- remove "s" keymap
-vim.keymap.set("n", "S", ":w<CR>")                  -- save
-vim.keymap.set("n", "Q", ":q<CR>")                  -- quit
-vim.keymap.set("n", "R", ":source $MYVIMRC<CR>")    -- reload nvim config
-vim.keymap.set("n", "<leader><CR>", ":nohl<CR>")    -- cancel high light search
+local mode_nv = {'n', 'v'};
+local mode_v = {'v'};
+local mode_i = {'i'};
 
-vim.keymap.set("n", "x", '"_x')     -- delete character but not copy to register
+local keymaps = {
+    -- general keymaps
+    { from = 's'               ,to = '<nop>'                        },
+    { from = 'S'               ,to = ':w<CR>'                       },
+    { from = 'Q'               ,to = ':q<CR>'                       },
+    { from = '<leader><CR>'    ,to = ':nohl<CR>'                    },
+    -- cursor movement
+    { from = 'H'               ,to = '^'            ,mode = mode_nv },
+    { from = 'L'               ,to = '$'            ,mode = mode_nv },
+    -- split window
+    { from = '<leader>ss'      ,to = '<C-w>w'	                    },
+    { from = '<leader>sv'      ,to = '<C-w>v'	                    },
+    { from = '<leader>sh'      ,to = '<C-w>s'	                    },
+    { from = '<leader>se'      ,to = '<C-w>='	                    },
+    { from = '<leader>sc'      ,to = ':close<CR>'                   },
+}
 
--- cursor movement
-vim.keymap.set("n", "H", "0")
-vim.keymap.set("n", "L", "$")
-
--- split window
-vim.keymap.set("n", "<leader>sv", "<C-w>v")         -- split window vertically
-vim.keymap.set("n", "<leader>sh", "<C-w>s")         -- split window horizontally
-vim.keymap.set("n", "<leader>se", "<C-w>=")         -- make split window equal width
-vim.keymap.set("n", "<leader>sc", ":close<CR>")     -- close current split window
-
+for _, mapping in ipairs(keymaps) do
+	vim.keymap.set(mapping.mode or "n", mapping.from, mapping.to, { noremap = true })
+end
